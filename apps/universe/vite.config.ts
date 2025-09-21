@@ -6,6 +6,9 @@ export default defineConfig({
         outDir: 'dist',
         emptyOutDir: true
     },
+    optimizeDeps: {
+        exclude: ['three']
+    },
     server: {
         port: 3000,
         open: true,
