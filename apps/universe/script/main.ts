@@ -9,58 +9,60 @@ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 // @ts-ignore
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
+import renderTyped from './me';
+
 const appItems = [
     {
         index: 1,
-        name:'我',
-        url:'/about',
-        row:1,
-        column:2,
-        // img
-
+        element: 'me',
+        name: '我',
+        url: '/about',
+        row: 1,
+        column: 2,
+        icon: 'mdi:home',
     },
     {
         index: 2,
-        name:'profile',
-        url:'/profile',
-        row:1,
-        column:4,
-        // img
-
+        element: 'me',
+        name: 'profile',
+        url: '/profile',
+        row: 1,
+        column: 4,
+        icon: 'mdi:home',
     },
     {
         index: 3,
-        name:'music',
-        url:'/music',
-        row:2,
-        column:1,
-        // img
-
+        element: 'music',
+        name: 'music',
+        url: '/music',
+        row: 2,
+        column: 1,
+        icon: 'mdi:home',
     },
     {
         index: 4,
-        name:'record',
-        url:'/record',
-        row:2,
-        column:3,
-        // img
-
-    },{
+        element: 'record',
+        name: 'record',
+        url: '/record',
+        row: 2,
+        column: 3,
+        icon: 'mdi:home',
+    }, {
         index: 5,
-        name:'足迹',
-        url:'/footprint',
-        row:2,
-        column:5,
-        // img
-
-    },{
+        element: 'footprint',
+        name: '足迹',
+        url: '/footprint',
+        row: 2,
+        column: 5,
+        icon: 'mdi:home',
+    }, {
         index: 6,
-        name:'ai',
-        url:'/ai',
-        row:3,
-        column:3,
-        // img
-
+        element: 'ai',
+        name: 'ai',
+        url: '/ai',
+        row: 3,
+        column: 3,
+        icon: 'mdi:home',
     }
 ]
 
@@ -70,13 +72,19 @@ let controls: any;
 const objects: any[] = [];
 const targets: { table: any[], sphere: any[], helix: any[], grid: any[] } = { table: [], sphere: [], helix: [], grid: [] };
 
-const RenderAppItem = (name: string, url: string)=>{
+const RenderAppItem = (el: string, name: string, url: string, iconName: string) => {
     const element = document.createElement('div');
     element.className = 'app-item';
+    element.classList.add(el);
 
     const appItemBox = document.createElement('div');
     appItemBox.className = 'app-item-box';
-    appItemBox.addEventListener('click', ()=>{
+    const appItemIcon = document.createElement('span');
+    appItemIcon.className = 'app-item-icon';
+    const iconHTML = `<span class="iconify" data-icon="${iconName}"></span>`;
+    appItemIcon.innerHTML = iconHTML;
+    appItemBox.appendChild(appItemIcon);
+    appItemBox.addEventListener('click', () => {
         window.location.href = url;
     });
     // appItemBox.textContent = String((index / 5) + 1);
@@ -95,15 +103,15 @@ animate();
 function init() {
     // 初始化相机
     camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.z = 3000;
+    camera.position.z = 1500;
 
     scene = new THREE.Scene();
 
     // table
 
     for (let i = 0; i < appItems.length; i++) {
-        const element = RenderAppItem(appItems[i].name, appItems[i].url);
-    //  随机位置
+        const element = RenderAppItem(appItems[i].element, appItems[i].name, appItems[i].url, appItems[i].icon);
+        //  随机位置
         const objectCSS = new CSS3DObject(element);
         objectCSS.position.x = Math.random() * 4000 - 2000;
         objectCSS.position.y = Math.random() * 4000 - 2000;
@@ -120,77 +128,19 @@ function init() {
         const GRID_ROWS = 3;  // 网格行数
         const CELL_WIDTH = 140;  // 每个单元格宽度
         const CELL_HEIGHT = 180; // 每个单元格高度
-        
+
         // 计算居中位置
         const gridWidth = GRID_COLS * CELL_WIDTH;
         const gridHeight = GRID_ROWS * CELL_HEIGHT;
         const centerOffsetX = -gridWidth / 2 + CELL_WIDTH / 2;  // 水平居中偏移
         const centerOffsetY = gridHeight / 2 - CELL_HEIGHT / 2; // 垂直居中偏移
-        
+
         object.position.x = (appItems[i].column - 1) * CELL_WIDTH + centerOffsetX;
         object.position.y = -((appItems[i].row - 1) * CELL_HEIGHT - centerOffsetY);
 
         targets.table.push(object);
 
     }
-
-    // sphere
-
-    // const vector = new THREE.Vector3();
-
-    // for (let i = 0, l = objects.length; i < l; i++) {
-
-    //     const phi = Math.acos(- 1 + (2 * i) / l);
-    //     const theta = Math.sqrt(l * Math.PI) * phi;
-
-    //     const object = new THREE.Object3D();
-
-    //     object.position.setFromSphericalCoords(800, phi, theta);
-
-    //     vector.copy(object.position).multiplyScalar(2);
-
-    //     object.lookAt(vector);
-
-    //     targets.sphere.push(object);
-
-    // }
-
-    // // helix
-
-    // for (let i = 0, l = objects.length; i < l; i++) {
-
-    //     const theta = i * 0.175 + Math.PI;
-    //     const y = - (i * 8) + 450;
-
-    //     const object = new THREE.Object3D();
-
-    //     object.position.setFromCylindricalCoords(900, theta, y);
-
-    //     vector.x = object.position.x * 2;
-    //     vector.y = object.position.y;
-    //     vector.z = object.position.z * 2;
-
-    //     object.lookAt(vector);
-
-    //     targets.helix.push(object);
-
-    // }
-
-    // // grid
-
-    // for (let i = 0; i < objects.length; i++) {
-
-    //     const object = new THREE.Object3D();
-
-    //     object.position.x = ((i % 5) * 400) - 800;
-    //     object.position.y = (- (Math.floor(i / 5) % 5) * 400) + 800;
-    //     object.position.z = (Math.floor(i / 25)) * 1000 - 2000;
-
-    //     targets.grid.push(object);
-
-    // }
-
-    //
 
     renderer = new CSS3DRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
@@ -203,39 +153,23 @@ function init() {
     controls.maxDistance = 6000;
     controls.addEventListener('change', render);
 
-    // const buttonTable = document.getElementById('table');
-    // buttonTable!.addEventListener('click', function () {
-    //     setActiveButton('table');
-    //     transform(targets.table, 2000);
-    // });
-
-    // const buttonSphere = document.getElementById('sphere');
-    // buttonSphere!.addEventListener('click', function () {
-    //     setActiveButton('sphere');
-    //     transform(targets.sphere, 2000);
-    // });
-
-    // const buttonHelix = document.getElementById('helix');
-    // buttonHelix!.addEventListener('click', function () {
-    //     setActiveButton('helix');
-    //     transform(targets.helix, 2000);
-    // });
-
-    // const buttonGrid = document.getElementById('grid');
-    // buttonGrid!.addEventListener('click', function () {
-    //     setActiveButton('grid');
-    //     transform(targets.grid, 2000);
-    // });
-
     transform(targets.table, 2000);
 
     // 生成随机星星背景
     generateEnhancedStars(200); // 生成200颗星星
 
-    //
-
     window.addEventListener('resize', onWindowResize);
 
+    // me handle
+    const meElement = document.querySelector('.app-item.me')
+    if (meElement) {
+        meElement.addEventListener('click', renderTyped)
+    }
+
+}
+
+function renderTyped() {
+    console.log("123")
 }
 
 function transform(targets: any[], duration: number) {
@@ -334,15 +268,15 @@ function createTwinkleAnimation() {
 function generateEnhancedStars(count: number) {
     // 先创建CSS动画
     createTwinkleAnimation();
-    
+
     for (let i = 0; i < count; i++) {
         const star = document.createElement('div');
         star.className = 'star';
-        
+
         // 随机大小分类
         const sizeType = Math.random();
         let size, sizeClass;
-        
+
         if (sizeType < 0.6) {
             // 60% 小星星
             size = Math.random() * 1 + 0.5; // 0.5-1.5px
@@ -356,20 +290,20 @@ function generateEnhancedStars(count: number) {
             size = Math.random() * 2 + 3; // 3-5px
             sizeClass = 'star-large';
         }
-        
+
         star.classList.add(sizeClass);
         star.style.width = `${size}px`;
         star.style.height = `${size}px`;
         star.style.backgroundColor = '#ffffff';
         star.style.borderRadius = '50%';
         star.style.position = 'fixed';
-        
+
         // 随机位置
         const x = Math.random() * window.innerWidth;
         const y = Math.random() * window.innerHeight;
         star.style.left = `${x}px`;
         star.style.top = `${y}px`;
-        
+
         // 根据大小设置透明度 (大的更亮，模拟近处)
         let opacity;
         if (sizeClass === 'star-small') {
@@ -380,7 +314,7 @@ function generateEnhancedStars(count: number) {
             opacity = Math.random() * 0.3 + 0.7; // 0.7-1.0 (近处，亮)
         }
         star.style.opacity = opacity.toString();
-        
+
         // 随机颜色变化 (模拟不同类型的星星)
         const colorVariation = Math.random();
         if (colorVariation < 0.1) {
@@ -390,11 +324,11 @@ function generateEnhancedStars(count: number) {
         } else if (colorVariation < 0.25) {
             star.style.backgroundColor = '#ffccdd'; // 淡粉色
         }
-        
+
         // 随机闪烁延迟
         const twinkleDelay = Math.random() * 5;
         star.style.animationDelay = `${twinkleDelay}s`;
-        
+
         document.body.appendChild(star);
     }
 }
