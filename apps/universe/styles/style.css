@@ -1,89 +1,85 @@
-/* 打字机效果容器 - 左侧垂直居中 */
-.typed-container {
-    position: fixed;
-    left: 50px;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 1000;
-    font-size: 24px;
-    color: #ffffff;
-    font-family: 'Courier New', monospace;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    max-width: 300px;
-    line-height: 1.5;
-}
-
 /* 玻璃效果 */
 .app-item {
-    font-family: Helvetica, sans-serif;
-    text-align: center;
-    line-height: normal;
-    cursor: pointer;
+  font-family: Helvetica, sans-serif;
+  text-align: center;
+  line-height: normal;
+  cursor: pointer;
 }
 
 .app-item-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 120px;
-    height: 120px;
-    background: rgba(255, 255, 255, 0.09);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 
-      0 8px 32px rgba(0, 0, 0, 0.1),
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -1px 0 rgba(255, 255, 255, 0.1),
-      inset 0 0 8px 4px rgba(255, 255, 255, 0.4);
-    position: relative;
-    overflow: hidden;
-  }
-  
-  .app-item-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent,
-      rgba(255, 255, 255, 0.8),
-      transparent
-    );
-  }
-  
-  .app-item-box::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 100%;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.8),
-      transparent,
-      rgba(255, 255, 255, 0.3)
-    );
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 8px 4px rgba(255, 255, 255, 0.4);
+  position: relative;
+  overflow: hidden;
+}
 
-  .app-item-icon{
-    font-size: 60px;
-  }
+.app-item-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+}
+
+.app-item-box::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.8),
+    transparent,
+    rgba(255, 255, 255, 0.3)
+  );
+}
+
+.app-item-icon {
+  font-size: 60px;
+}
 
 .app-item-name {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 /* 打字机效果 */
-.typed-container{
-    width: 300px;
-    color:rgb(40, 255, 87);
-    font-size: 20px;
-    font-weight: 500;
+.typed-container {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-500px) translateY(-50%);
+  z-index: 1000;
+  font-size: 24px;
+  color: #ffffff;
+  font-family: "Courier New", monospace;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+  width: 400px;
+  height: 200px;
+  color: rgb(40, 255, 87);
+  font-size: 20px;
+  font-weight: 500;
 }
