@@ -9,8 +9,8 @@ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 // @ts-ignore
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
-import renderTyped from './me';
-
+import renderTypedFromMe from './me';
+import { generateEnhancedStars } from './star';
 const appItems = [
     {
         index: 1,
@@ -68,6 +68,7 @@ const appItems = [
 
 let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: any;
 let controls: any;
+let appGroup: THREE.Group | null = null;
 
 const objects: any[] = [];
 const targets: { table: any[], sphere: any[], helix: any[], grid: any[] } = { table: [], sphere: [], helix: [], grid: [] };
@@ -76,6 +77,9 @@ const RenderAppItem = (el: string, name: string, url: string, iconName: string) 
     const element = document.createElement('div');
     element.className = 'app-item';
     element.classList.add(el);
+    element.setAttribute('data-url', url);
+    element.setAttribute('data-name', name);
+    element.setAttribute('data-el', el);
 
     const appItemBox = document.createElement('div');
     appItemBox.className = 'app-item-box';
@@ -103,7 +107,7 @@ animate();
 function init() {
     // 初始化相机
     camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
-    camera.position.z = 1500;
+    camera.position.z = 1520;
 
     scene = new THREE.Scene();
 
@@ -160,16 +164,67 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
 
-    // me handle
-    const meElement = document.querySelector('.app-item.me')
-    if (meElement) {
-        meElement.addEventListener('click', renderTyped)
+    // 构建全局组，统一管理与旋转
+    appGroup = new THREE.Group();
+    for (let i = 0; i < objects.length; i++) {
+        const obj = objects[i];
+        scene.remove(obj);
+        appGroup.add(obj);
     }
-
+    scene.add(appGroup);
 }
 
 function renderTyped() {
-    console.log("123")
+    if (appGroup) {
+        const duration = 1200;
+        const easing = TWEEN.Easing.Exponential.InOut;
+
+        new TWEEN.Tween(appGroup.rotation)
+            .to({ 
+                x: appGroup.rotation.x,
+                y: appGroup.rotation.y - Math.PI / 4,
+                z: appGroup.rotation.z
+            }, duration)
+            .easing(easing)
+            .start();
+
+        // 计算将左侧对齐到屏幕中线所需的世界坐标位移
+        let minScreenX = Infinity;
+        for (let i = 0; i < appGroup.children.length; i++) {
+            const child = appGroup.children[i] as THREE.Object3D;
+            const worldPos = new THREE.Vector3();
+            child.getWorldPosition(worldPos);
+            const ndc = worldPos.clone().project(camera);
+            const screenX = (ndc.x + 1) / 2 * window.innerWidth;
+            if (screenX < minScreenX) minScreenX = screenX;
+        }
+        const desiredLeftPx = window.innerWidth / 2;
+        const deltaPx = desiredLeftPx - minScreenX;
+        // 估算像素到世界单位的比例（在组原点附近取样）
+        const gp = new THREE.Vector3();
+        appGroup.getWorldPosition(gp);
+        const gp2 = gp.clone().add(new THREE.Vector3(1, 0, 0));
+        const s1 = gp.clone().project(camera);
+        const s2 = gp2.clone().project(camera);
+        const pxPerWorld = ((s2.x - s1.x) * 0.5 + 0.5) * window.innerWidth - ((s1.x) * 0.5 + 0.5) * window.innerWidth; // 简化为差值*屏宽
+        const worldDeltaX = pxPerWorld !== 0 ? (deltaPx / pxPerWorld) : 0;
+        const targetX = appGroup.position.x + worldDeltaX;
+
+        // 将整体在 x 轴平移到目标位置，使左沿位于屏幕中线
+        new TWEEN.Tween(appGroup.position)
+            .to({ x: targetX }, duration)
+            .easing(easing)
+            .start();
+
+        // 统一驱动渲染，确保两段补间同步且顺滑
+        new TWEEN.Tween({})
+            .to({}, duration)
+            .onUpdate(render)
+            .start();
+    }
+    
+    // 调用导入的函数
+    renderTypedFromMe();
 }
 
 function transform(targets: any[], duration: number) {
@@ -192,12 +247,99 @@ function transform(targets: any[], duration: number) {
             .start();
 
     }
-
     new TWEEN.Tween({})
         .to({}, duration * 2)
         .onUpdate(render)
         .start();
 
+}
+
+
+//监听点击事件
+window.addEventListener("click", onClick, false);
+
+//事件函数
+function onClick(event: MouseEvent) {
+    // debugger;
+    console.log("点击了", event);
+    
+    // 对于 CSS3DObject，我们需要使用不同的检测方法
+    // 首先尝试直接检测 DOM 元素
+    const element = document.elementFromPoint(event.clientX, event.clientY);
+    console.log("点击的元素:", element);
+    
+    if (element && element.closest('.app-item')) {
+        // 找到了应用元素
+        const appItem = element.closest('.app-item') as HTMLElement;
+        const data = (appItem as any).dataset || {};
+        const isMe = appItem.classList.contains('me') || data.el === 'me';
+        const url = data.url as string | undefined;
+
+        if (isMe) {
+            console.log("执行 '我' 应用的特殊功能");
+            renderTyped();
+            return;
+        }
+        if (url) {
+            console.log(`跳转到应用: ${url}`);
+            window.location.href = url;
+            return;
+        }
+    }
+    
+    // // 如果直接检测失败，尝试使用 Raycaster
+    // console.log("尝试使用 Raycaster 检测...");
+    // const raycaster = new THREE.Raycaster();
+    // const mouse = new THREE.Vector2();
+    
+    // // 计算鼠标或触摸点的位置
+    // mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    // mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+    
+    // // 更新射线
+    // raycaster.setFromCamera(mouse, camera);
+    
+    // // 计算与所有对象的交点
+    // const intersects = raycaster.intersectObjects(objects, true);
+    // console.log("Raycaster 检测结果:", intersects);
+    
+    // if (intersects.length > 0) {
+    //     // 处理点击事件
+    //     const clickedObject = intersects[0].object as any;
+        
+    //     // 检查是否是我们的应用对象
+    //     if (clickedObject.appData) {
+    //         const appData = clickedObject.appData;
+            
+    //         // 详细的点击信息
+    //         console.log("=== 点击检测结果 (Raycaster) ===");
+    //         console.log("应用名称:", appData.name);
+    //         console.log("应用元素类型:", appData.element);
+    //         console.log("应用索引:", appData.index);
+    //         console.log("应用位置:", `行${appData.row}, 列${appData.column}`);
+    //         console.log("应用URL:", appData.url);
+    //         console.log("应用图标:", appData.icon);
+    //         console.log("==================");
+            
+    //         // 显示视觉反馈
+    //         showClickFeedback(appData);
+            
+    //         // 根据不同的应用执行不同的操作
+    //         if (appData.element === 'me') {
+    //             console.log("执行 '我' 应用的特殊功能");
+    //             renderTyped();
+    //         } else {
+    //             console.log(`跳转到 ${appData.name} 应用: ${appData.url}`);
+    //             window.location.href = appData.url;
+    //         }
+    //     } else {
+    //         console.log("点击了其他对象:", clickedObject);
+    //     }
+    // } else {
+    //     console.log("没有点击到任何应用对象");
+    //     console.log("objects 数组长度:", objects.length);
+    //     console.log("objects 内容:", objects);
+    // }
 }
 
 function onWindowResize() {
@@ -227,108 +369,3 @@ function render() {
 
 }
 
-
-// 页面随机添加star - 增强版星空背景
-
-// 创建闪烁动画的CSS
-function createTwinkleAnimation() {
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes twinkle {
-            0% { opacity: 0.2; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.2); }
-            100% { opacity: 0.3; transform: scale(0.8); }
-        }
-        
-        .star {
-            pointer-events: none;
-            z-index: -1;
-            box-shadow: 0 0 6px rgba(255, 255, 255, 0.8);
-        }
-        
-        /* 不同大小的星星有不同的闪烁效果 */
-        .star-small {
-            animation-duration: 2s !important;
-        }
-        
-        .star-medium {
-            animation-duration: 3s !important;
-            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
-        }
-        
-        .star-large {
-            animation-duration: 4s !important;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 1);
-        }
-    `;
-    document.head.appendChild(style);
-}
-
-// 增强版星星生成函数
-function generateEnhancedStars(count: number) {
-    // 先创建CSS动画
-    createTwinkleAnimation();
-
-    for (let i = 0; i < count; i++) {
-        const star = document.createElement('div');
-        star.className = 'star';
-
-        // 随机大小分类
-        const sizeType = Math.random();
-        let size, sizeClass;
-
-        if (sizeType < 0.6) {
-            // 60% 小星星
-            size = Math.random() * 1 + 0.5; // 0.5-1.5px
-            sizeClass = 'star-small';
-        } else if (sizeType < 0.9) {
-            // 30% 中等星星
-            size = Math.random() * 1.5 + 1.5; // 1.5-3px
-            sizeClass = 'star-medium';
-        } else {
-            // 10% 大星星
-            size = Math.random() * 2 + 3; // 3-5px
-            sizeClass = 'star-large';
-        }
-
-        star.classList.add(sizeClass);
-        star.style.width = `${size}px`;
-        star.style.height = `${size}px`;
-        star.style.backgroundColor = '#ffffff';
-        star.style.borderRadius = '50%';
-        star.style.position = 'fixed';
-
-        // 随机位置
-        const x = Math.random() * window.innerWidth;
-        const y = Math.random() * window.innerHeight;
-        star.style.left = `${x}px`;
-        star.style.top = `${y}px`;
-
-        // 根据大小设置透明度 (大的更亮，模拟近处)
-        let opacity;
-        if (sizeClass === 'star-small') {
-            opacity = Math.random() * 0.4 + 0.2; // 0.2-0.6 (远处，暗)
-        } else if (sizeClass === 'star-medium') {
-            opacity = Math.random() * 0.4 + 0.5; // 0.5-0.9 (中距离)
-        } else {
-            opacity = Math.random() * 0.3 + 0.7; // 0.7-1.0 (近处，亮)
-        }
-        star.style.opacity = opacity.toString();
-
-        // 随机颜色变化 (模拟不同类型的星星)
-        const colorVariation = Math.random();
-        if (colorVariation < 0.1) {
-            star.style.backgroundColor = '#ffffcc'; // 淡黄色
-        } else if (colorVariation < 0.2) {
-            star.style.backgroundColor = '#ccddff'; // 淡蓝色
-        } else if (colorVariation < 0.25) {
-            star.style.backgroundColor = '#ffccdd'; // 淡粉色
-        }
-
-        // 随机闪烁延迟
-        const twinkleDelay = Math.random() * 5;
-        star.style.animationDelay = `${twinkleDelay}s`;
-
-        document.body.appendChild(star);
-    }
-}

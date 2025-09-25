@@ -1,3 +1,18 @@
+/* 打字机效果容器 - 左侧垂直居中 */
+.typed-container {
+    position: fixed;
+    left: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+    font-size: 24px;
+    color: #ffffff;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    max-width: 300px;
+    line-height: 1.5;
+}
+
 /* 玻璃效果 */
 .app-item {
     font-family: Helvetica, sans-serif;
@@ -63,4 +78,12 @@
 
 .app-item-name {
     margin-top: 10px;
+}
+
+/* 打字机效果 */
+.typed-container{
+    width: 300px;
+    color:rgb(40, 255, 87);
+    font-size: 20px;
+    font-weight: 500;
 }
