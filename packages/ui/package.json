@@ -10,6 +10,15 @@
   "scripts": {
     "lint": "eslint \"**/*.ts\""
   },
+  "main": "index.ts",
+  "types": "index.ts",
+  "dependencies": {
+    "class-variance-authority": "*",
+    "tailwind-variants": "*",
+    "lucide-react": "*",
+    "@radix-ui/react-dialog": "*",
+    "@radix-ui/react-popover": "*"
+  },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
