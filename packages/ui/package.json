@@ -12,17 +12,24 @@
   },
   "main": "index.ts",
   "types": "index.ts",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
   "dependencies": {
-    "class-variance-authority": "*",
-    "tailwind-variants": "*",
-    "lucide-react": "*",
     "@radix-ui/react-dialog": "*",
-    "@radix-ui/react-popover": "*"
+    "@radix-ui/react-popover": "*",
+    "class-variance-authority": "*",
+    "clsx": "^2.1.1",
+    "lucide-react": "*",
+    "tailwind-merge": "^2.5.2",
+    "tailwind-variants": "*"
   },
   "devDependencies": {
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "eslint": "^8.57.0",
+    "tailwindcss": "^4",
     "typescript": "5.5.4"
   }
 }
