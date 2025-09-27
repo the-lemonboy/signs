@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { motion, useAnimation } from "framer-motion";
 import Me from "./me";
 import Nav from "./nav";
+import SkillTags from "./skill-tags";
 export default function Profile() {
   const controls = useAnimation();
   const ref = useRef(null);
@@ -20,6 +21,7 @@ export default function Profile() {
     <div>
       <Nav />
       <Me />
+      <SkillTags />
     </div>
   )
 }
