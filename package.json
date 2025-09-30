@@ -6,7 +6,8 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "start": "turbo run dev --filter=universe",
-    "dev:profile": "turbo run dev --filter=profile"
+    "dev:profile": "turbo run dev --filter=profile",
+    "prepare": "husky"
   },
   "dependencies": {
     "@iconify/iconify": "^3.1.1",
@@ -17,13 +18,37 @@
     "tailwind-variants": "^3.1.1"
   },
   "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@commitlint/cli": "^20.0.0",
+    "@commitlint/config-conventional": "^20.0.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.57.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.3",
     "postcss": "^8.5.6",
     "prettier": "^3.2.5",
     "tailwindcss": "^4",
     "turbo": "^2.5.6"
   },
   "packageManager": "pnpm@8.15.6",
-  "name": "with-vite"
+  "name": "with-vite",
+  "lint-staged": {
+    "apps/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "packages/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "apps/**/*.{js,jsx}": [
+      "prettier --write"
+    ],
+    "packages/**/*.{js,jsx}": [
+      "prettier --write"
+    ],
+    "*.{md,css,json}": [
+      "prettier --write"
+    ]
+  }
 }
