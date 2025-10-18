@@ -3,13 +3,17 @@ export default function Me() {
   return (
     <div className="w-full flex justify-center items-center">
       <div className="w-5xl flex justify-center items-center gap-2">
+        {/* right */}
+        <div className="grow-0 shrink-0">
+          <img src={avatar} alt="avatar" className="w-xs" />
+        </div>
         {/* left */}
         <div className="flex-1">
           <div className="w-full flex items-center space-x-2">
+            <div className="w-full h-[1px] bg-primary" />
             <h2 className="text-4xl font-bold text-primary text-nowrap">
               关于我
             </h2>
-            <div className="w-full h-[1px] bg-primary" />
           </div>
           <div className="mt-4 mb-2">
             <p className="text-primary text-sm">
@@ -19,7 +23,7 @@ export default function Me() {
             </p>
           </div>
           {/* main tags */}
-          <ul className="grid grid-cols-2 space-y-1 text-white">
+          <ul className="w-1/2 grid grid-cols-2 space-y-1 text-white">
             <li className="before:content-['▹'] before:mr-1 before:text-green-500">
               TypeScript
             </li>
@@ -36,10 +40,6 @@ export default function Me() {
               Node.js
             </li>
           </ul>
-        </div>
-        {/* right */}
-        <div className="grow-0 shrink-0">
-          <img src={avatar} alt="avatar" className="w-xs" />
         </div>
       </div>
     </div>

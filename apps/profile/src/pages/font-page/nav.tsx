@@ -18,19 +18,19 @@ export default function Nav() {
   }, []);
 
   const isHidden = scrollDirection === "down" && !scrolledToTop;
-  const isCondensed = !scrolledToTop;
+  // const isCondensed = !scrolledToTop;
 
   return (
     <header
       className={[
-        "fixed top-0 z-50 w-full",
+        "fixed top-0 z-50 w-full h-18",
         "backdrop-blur", // 模糊背景
         "bg-[rgba(10,25,47,0.85)]",
         "transition-all duration-300 ease-in-out",
         // 高度：顶部时较高，离顶时收缩
-        isCondensed ? "h-12" : "h-16",
+        // isCondensed ? "h-20" : "h-20",
         // 平移隐藏：下滚隐藏，上滚展示
-        isHidden ? "-translate-y-12" : "translate-y-0",
+        isHidden ? "-translate-y-18" : "translate-y-0",
         // 阴影：离顶时显示阴影
         !scrolledToTop ? "shadow-[0_10px_30px_-10px_rgba(2,12,27,0.7)]" : "",
         // 响应式内边距（接近你的示例 50/40/25）

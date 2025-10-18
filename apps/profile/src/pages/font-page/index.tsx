@@ -4,6 +4,8 @@ import Hero from "./hero";
 import Me from "./me";
 import Nav from "./nav";
 import SkillTags from "./skill-tags";
+import Project from "./project";
+import OpenSource from "./open-source";
 
 export default function Profile() {
   const controls = useAnimation();
@@ -24,6 +26,8 @@ export default function Profile() {
       <Hero />
       <Me />
       <SkillTags />
+      <Project />
+      <OpenSource />
     </div>
   );
 }
