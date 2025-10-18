@@ -62,6 +62,13 @@ module.exports = {
         "no-debugger": "error",
         "prefer-const": "error",
         "no-var": "error",
+        "no-restricted-syntax": "off",
+        "import/no-extraneous-dependencies": [
+          "error",
+          { devDependencies: true },
+        ],
+        "import/extensions": "off",
+        "import/no-unresolved": "off",
       },
     },
   ],
