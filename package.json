@@ -7,6 +7,7 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "start": "turbo run dev --filter=universe",
     "dev:profile": "turbo run dev --filter=profile",
+    "dev:editor": "turbo run dev --filter=editor",
     "prepare": "husky"
   },
   "dependencies": {
@@ -34,11 +35,9 @@
   "name": "with-vite",
   "lint-staged": {
     "apps/**/*.{ts,tsx}": [
-      "eslint --fix",
       "prettier --write"
     ],
     "packages/**/*.{ts,tsx}": [
-      "eslint --fix",
       "prettier --write"
     ],
     "apps/**/*.{js,jsx}": [

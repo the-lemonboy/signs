@@ -1,0 +1,93 @@
+.toolbar {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background: #e0e0e0;
+  margin: 0 8px;
+}
+
+.toolbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e0e0e0;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a5568;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.toolbar-button:hover {
+  background: #f7fafc;
+  border-color: #cbd5e0;
+  color: #2d3748;
+}
+
+.toolbar-button.active {
+  background: #667eea;
+  border-color: #667eea;
+  color: white;
+}
+
+.toolbar-button.active:hover {
+  background: #5a67d8;
+  border-color: #5a67d8;
+}
+
+/* 特殊按钮样式 */
+.toolbar-button[data-format="bold"] {
+  font-weight: 900;
+}
+
+.toolbar-button[data-format="italic"] {
+  font-style: italic;
+}
+
+.toolbar-button[data-format="underline"] {
+  text-decoration: underline;
+}
+
+.toolbar-button[data-format="code"] {
+  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-size: 12px;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 8px 12px;
+    gap: 4px;
+  }
+
+  .toolbar-button {
+    width: 28px;
+    height: 28px;
+    font-size: 12px;
+  }
+
+  .toolbar-divider {
+    height: 20px;
+    margin: 0 4px;
+  }
+}
